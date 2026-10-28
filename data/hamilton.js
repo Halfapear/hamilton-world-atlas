@@ -1,0 +1,80 @@
+window.HAMILTON = {
+  title: "Hamilton / 汉密尔顿",
+  tourTitle: "韩国巡演 2026–2027",
+  lastVerified: "2026-10-27",
+  note: "目前仅展示已由场馆官方公告确认的韩国两站；没有官方公布的城市不作为已确认巡演站点展示。",
+  cities: [
+    {
+      id: "busan",
+      name: "釜山",
+      country: "韩国",
+      venue: "Dream Theatre（드림씨어터）",
+      venueAddress: "釜山 Dream Theatre；具体交通以场馆官网为准",
+      startDate: "2026-12-17",
+      endDate: "2027-01-16",
+      ticketOpen: "2026-11-11T13:00:00+08:00",
+      ticketOpenKorea: "2026-11-11T14:00:00+09:00",
+      ticketOpenLabel: "2026 年 11 月 11 日 13:00（北京时间）",
+      firstSale: "釜山场首轮售票；演出期间为 2026-12-17 至 2027-01-16",
+      prices: [
+        { tier: "VIP", price: 220000 },
+        { tier: "R", price: 180000 },
+        { tier: "S", price: 140000 },
+        { tier: "A", price: 100000 },
+        { tier: "B", price: 70000 }
+      ],
+      sourceTitle: "Dream Theatre 官方开票公告",
+      sourceUrl: "https://www.dreamtheatre.co.kr/Info/Notice/NoticeDetail?num=360",
+      bookingStatus: "notice_only",
+      bookingUrl: "https://www.dreamtheatre.co.kr/Info/Notice/NoticeDetail?num=360",
+      bookingLabel: "查看官方开票公告",
+      ticketHubUrl: "https://nol.yanolja.com/ticket",
+      internationalUrl: "https://world.nol.com/zh-CN/ticket",
+      venueInfoUrl: "https://www.dreamtheatre.co.kr/Dream/DreamTheatre/Location",
+      seatMapUrl: "https://www.dreamtheatre.co.kr/Dream/DreamTheatre/SeatingMap",
+      latitude: 35.1796,
+      longitude: 129.0756,
+      short: "BUSAN",
+      summary: "韩国巡演首站。官方已公布首轮开票时间、演出期间和票价。",
+      exactSessions: false
+    },
+    {
+      id: "seoul",
+      name: "首尔",
+      country: "韩国",
+      venue: "世宗文化会馆大剧场（세종문화회관 대극장）",
+      venueAddress: "首尔世宗文化会馆大剧场；具体交通以场馆官网为准",
+      startDate: "2027-01-21",
+      endDate: "2027-03-20",
+      ticketOpen: "2026-11-11T14:00:00+08:00",
+      ticketOpenKorea: "2026-11-11T15:00:00+09:00",
+      ticketOpenLabel: "2026 年 11 月 11 日 14:00（北京时间）",
+      firstSale: "首轮仅开放 2027-01-21 至 2027-01-24 开演周部分一楼 VIP 座位；其他场次以官方后续公告为准。",
+      prices: [
+        { tier: "VIP", price: 220000 },
+        { tier: "R", price: 180000 },
+        { tier: "S", price: 140000 },
+        { tier: "A", price: 100000 },
+        { tier: "B", price: 70000 }
+      ],
+      sourceTitle: "世宗文化会馆官方开票公告",
+      sourceUrl: "https://www.sejongpac.or.kr/portal/bbs/B0000049/view.do?menuNo=200440&nttId=50223&pageIndex=1",
+      bookingStatus: "direct",
+      bookingUrl: "https://nol.yanolja.com/ticket/products/26015650",
+      bookingLabel: "打开 NOL 官方售票商品页",
+      ticketHubUrl: "https://nol.yanolja.com/ticket",
+      internationalUrl: "https://world.nol.com/zh-CN/ticket",
+      venueInfoUrl: "https://www.sejongpac.or.kr/portal/performance/performance/sejongIntro.do?menuNo=200575",
+      latitude: 37.5665,
+      longitude: 126.978,
+      short: "SEOUL",
+      summary: "韩国巡演第二站。首轮优先开放开演周的部分 VIP 座位。",
+      exactSessions: false
+    }
+  ],
+  socialPost: {
+    title: "音乐剧《汉密尔顿》韩国巡演宣卡",
+    url: "https://www.xiaohongshu.com/explore/6ae030f4000000000d01f773?xsec_token=ABct8JaW6M4TlUStRzMmd5ZE-K5JPnbkGvuCjLF6minHk%3D&xsec_source=pc_feed",
+    note: "这是宣传信息，不是官方售票入口。购票时间、票价及规则以场馆公告为准。"
+  }
+};

@@ -1,2 +1,57 @@
-# hamilton-world-atlas
-An unofficial interactive atlas of Hamilton productions and tours, featuring a world map, verified official ticket links, booking guides, trip planning, and calendar exports.
+# Hamilton / 汉密尔顿韩国巡演购票助手
+
+这是一个只服务于《Hamilton / 汉密尔顿》韩国巡演的本地交互式 H5 原型。它不是通用演出平台，不包含其他音乐剧、演唱会或泛巡演数据。
+
+## 怎么打开
+
+### 推荐：Windows 一键启动
+1. 将整个项目文件夹放到：`D:\Onedrive\OneDrive - Queen Mary, University of London\桌面\大四\文学\汉密尔顿`
+2. 双击 `启动汉密尔顿助手.bat`。
+3. 脚本会尝试用 Python 在本机启动静态网页服务，并打开浏览器。若电脑没有 Python，请按下方手动方式打开。
+
+### 手动方式
+在项目目录打开终端，运行：
+
+```bash
+python -m http.server 8765 --bind 127.0.0.1
+```
+
+然后打开 `http://127.0.0.1:8765/index.html`。请保留 `data/hamilton.js`，不要只复制 `index.html`。
+
+## 已实现
+
+- 韩国巡演示意地图：点击首尔或釜山进入城市详情。
+- 城市详情：演出期间、场馆、开票时间、票价、官方来源链接和倒计时。
+- 交互式购票方案：选择意向日期、场次偏好、票档和张数；即时计算预算。
+- 购票步骤：官方入口、登录准备、选实际日期/场次/座位、支付核对、订单保存。
+- 购票清单下载 TXT。
+- 个人计划本地保存，支持导出 JSON、开票提醒 ICS。
+- 购票前检查项可勾选并保存在本机。
+- 仅展示汉密尔顿韩国两站，不虚构未公布的站点、具体场次、实时座位或余票。
+
+## 购票入口和数据边界
+
+- **釜山：** [Dream Theatre 官方开票公告](https://www.dreamtheatre.co.kr/Info/Notice/NoticeDetail?num=360)。目前已核实到官方公告，但没有确认独立直达下单页；应用会明确提示，不会把公告伪装成下单页。开票时从公告或官方票务首页再次确认真实购票链接。
+- **首尔：** [NOL 韩国站官方商品页](https://nol.yanolja.com/ticket/products/26015650)。页面当前显示开票预告；开票后实际场次、座位和余票以 NOL 页面为准。海外观众还应检查 [NOL World 中文国际站](https://world.nol.com/zh-CN/ticket) 是否上架同一商品；目前尚未确认该场在国际站有对应商品页。
+- **首尔场馆公告：** [世宗文化会馆官方开票公告](https://www.sejongpac.or.kr/portal/bbs/B0000049/view.do?menuNo=200440&nttId=50223&pageIndex=1)。
+- 北京时间：釜山首轮开票为 2026-11-11 13:00；首尔为同日 14:00。
+- 票价估算不含手续费；日期选择器只保存意向日期，不表示当天一定有场次或余票。
+
+## 完整购票步骤
+
+见 [购票流程.md](购票流程.md)，包含北京时间、官方入口、海外购票资格核对、登录/证件准备、选场/选座、支付与订单保存。
+
+## 本地数据怎么改
+
+编辑 `data/hamilton.js`。每个城市条目包含日期、开票时间、票价、官方公告、购票入口状态、场馆信息和来源。只添加有官方来源确认的汉密尔顿巡演站点。
+
+## 安全与尚未实现的功能
+
+- 不要求输入或保存 NOL、Dream Theatre 等第三方平台密码、验证码或银行卡信息。
+- 本项目不自动登录、抢票、绕过排队或处理支付。
+- 真实余票、座位图、订单同步、云端账号和公网部署尚未接入；需要票务平台授权或正式合作接口。
+- 开票提醒由用户下载 ICS 后导入系统日历；关闭浏览器后网页本身不会持续推送通知。
+
+## QA
+
+见 `tests/TEST_REPORT.md`。当前已运行 23 项应用逻辑与交互 smoke checks。执行环境的 Chromium URL 管理策略拦截本地页面，因此没有把轻量 DOM 测试冒充为完整真实浏览器视觉测试。

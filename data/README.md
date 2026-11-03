@@ -18,4 +18,12 @@
 
 如果日期尚未官方确认，不要填写猜测日期；如果票价未由官方公布，`prices` 留空。`startDate`, `endDate`, `ticketOpen` 都是可选字段。
 
-地图点位的 `dx`、`dy` 用于微调密集城市的标记位置，避免重叠；它们只影响视觉位置，不改变存储的经纬度。
+地图点位的 `dx`、`dy` 从 v1.1 起只调整文字标签位置，不移动城市圆点或巡演连线。`lat` / `lon` 必须是范围内的数值（纬度 -90～90，经度 -180～180）。
+
+## 本地底图
+
+`world-land-110m.json` 来自 [world-atlas@2.0.2](https://github.com/topojson/world-atlas)，其陆地数据源为 [Natural Earth](https://www.naturalearthdata.com/) v4.1.0、1:110m（公开领域）。world-atlas 分发采用 ISC 许可，原文保留在 `world-atlas-LICENSE.txt`。
+
+`tools/map_geometry.py` 解码 TopoJSON，处理跨 ±180° 经线的多边形和南极闭合，并使用同一 `PROJECTION` 生成 SVG。构建工具也把投影参数注入应用，避免底图与站点各用一套坐标。运行时不请求外部地图服务。
+
+`meta.version` 是应用版本，不是票务核验日期；只有重新核实官方资料时才更新核验日期。

@@ -4,6 +4,7 @@
 
 ## 当前版本
 
+- 应用版本：**v1.1**（2026-11-04，地图修复版）
 - 数据核验日期：2026-10-28
 - 4 个制作板块：纽约百老汇、北美巡演、伦敦西区、韩国世界巡演
 - 22 个当前／即将演出站点：纽约 1 个、北美巡演 18 个、伦敦 1 个、韩国 2 个
@@ -48,4 +49,26 @@
 
 ## 测试
 
-见 `tests/TEST_REPORT.md`。当前版本在 Chromium 中通过 47 项浏览器交互检查，覆盖世界地图标记、区域／制作／城市层级导航、筛选、票档预算、计划保存、日历与 JSON 导出、移动端横向溢出和 JavaScript 异常检查。测试运行脚本位于 `tests/test_app.py`，需要 Python Playwright 与 Chromium。
+见 `tests/TEST_REPORT.md`。v1.1 在 Windows 的 Microsoft Edge 和 Chromium 中各通过 **87 项**浏览器交互检查，另有 2 项地图几何回归测试。测试访问真实 localhost 页面，覆盖地理坐标、海岸线、密集点位点击、区域缩放、拖拽、键盘导航、购票准备功能及刷新后保存记录。
+
+```powershell
+python -m pip install playwright
+python -m playwright install chromium
+python tools/build.py
+python tests/test_map_geometry.py
+python tests/test_app.py
+# 使用本机已安装的 Edge：
+$env:ATLAS_BROWSER='msedge'
+python tests/test_app.py
+```
+
+## v1.1 地图修复
+
+- 用本地 Natural Earth 1:110m 陆地数据替换手绘示意轮廓；陆地、站点与路线共用经纬度等距矩形投影。
+- 城市圆点保持真实经纬度，`dx` / `dy` 只调整文字标签；修复釜山等点位漂移。
+- 区域筛选自动定位，缩放／重置以当前区域为中心；支持拖拽平移及 Tab + Enter 打开站点。
+- 修复北美密集城市的点击遮挡与跨 ±180° 经线的错误连线。
+- 无需联网加载底图。地图不展示国界，连线仅表示巡演顺序，不是交通路线；110m 简化底图不适合精确街道定位。
+- 原有个人计划存储键不变。票务数据仍核验于 **2026-10-28**，本次修复不代表重新核实开票／余票。
+
+底图来源和许可见 `data/README.md`；更新记录见 `CHANGELOG.md`。

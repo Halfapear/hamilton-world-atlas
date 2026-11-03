@@ -1,17 +1,31 @@
 from pathlib import Path
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from functools import partial
+from threading import Thread
+import os
+import sys
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 html=(ROOT/'index.html').read_text(encoding='utf-8')
 checks=[]
+sys.stdout.reconfigure(encoding='utf-8')
+artifacts=ROOT/'output'/'playwright'
+artifacts.mkdir(parents=True, exist_ok=True)
+server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(ROOT)))
+Thread(target=server.serve_forever,daemon=True).start()
+url=f'http://127.0.0.1:{server.server_port}/index.html'
 def check(name, condition, detail=''):
     checks.append((name, bool(condition), detail)); print(('PASS' if condition else 'FAIL')+' '+name, flush=True)
 with sync_playwright() as p:
-    browser=p.chromium.launch(headless=True, executable_path='/usr/bin/chromium', args=['--no-sandbox','--disable-dev-shm-usage','--disable-gpu'])
+    browser=p.chromium.launch(headless=True, **({'channel':os.environ['ATLAS_BROWSER']} if os.environ.get('ATLAS_BROWSER') else {}))
+    print(f'BROWSER: {os.environ.get("ATLAS_BROWSER") or "chromium"} {browser.version}', flush=True)
     page=browser.new_page(viewport={'width':1440,'height':1100}, accept_downloads=True)
     errors=[]
+    external_requests=[]
+    page.on('request',lambda r: external_requests.append(r.url) if r.url.startswith(('http://','https://')) and not r.url.startswith(url.rsplit('/',1)[0]+'/') else None)
     page.on('pageerror',lambda e: errors.append(str(e)))
     page.on('console',lambda m: errors.append(m.text) if m.type=='error' else None)
-    page.set_content(html,wait_until='domcontentloaded',timeout=10000)
+    page.goto(url,wait_until='domcontentloaded',timeout=10000)
     page.add_style_tag(content='html{scroll-behavior:auto!important} *{scroll-behavior:auto!important}')
     check('document title', 'Hamilton World Atlas' in page.title())
     check('app boot flag', page.locator('html').get_attribute('data-app-ready')=='true', page.locator('html').get_attribute('data-app-ready'))
@@ -23,6 +37,31 @@ with sync_playwright() as p:
     check('dynamic count badges match data', page.locator('#metric-stops').inner_text().startswith('22') and page.locator('[data-region-filter="north-america"]').inner_text().endswith('19'))
     check('22 stop cards', page.locator('#stops-grid .stop-card').count()==22)
     check('Hamilton-only scope', 'KPOP' not in page.locator('body').inner_text() and '大麦' not in page.locator('body').inner_text())
+    check('v1.1 metadata matches version badge',page.evaluate('HAMILTON_APP_TEST.DATA.meta.version')=='1.1' and page.locator('#app-version').inner_text()=='v1.1')
+    check('map routes share geographic marker coordinates',page.evaluate('''() => {
+      const app=HAMILTON_APP_TEST;
+      const routes=[['.route-line','north-american-tour'],['.korea-line','korea-world-tour']];
+      return routes.every(([selector,id])=>{
+        const points=document.querySelector(selector).points;
+        const stops=app.DATA.stops.filter(s=>s.productionId===id).sort((a,b)=>(a.routeOrder||0)-(b.routeOrder||0));
+        return points.numberOfItems===stops.length&&stops.every((s,i)=>{
+          const p=app.projection(s),q=points.getItem(i);
+          return Math.abs(p.x-q.x)<.001&&Math.abs(p.y-q.y)<.001;
+        });
+      });
+    }'''))
+    alignment=page.evaluate('''() => {
+      const app=HAMILTON_APP_TEST, lands=[...document.querySelectorAll('#map-content path.land')];
+      return ['new-york','london','seoul','busan'].map(id=>{
+        const s=app.stop(id),p=app.projection(s);
+        const nearLand=[-2,0,2].some(dx=>[-2,0,2].some(dy=>lands.some(land=>land.isPointInFill(new DOMPoint(p.x+dx,p.y+dy)))));
+        const dot=document.querySelector(`.map-marker[data-stop="${id}"] .dot`);
+        return {id,nearLand,exact:Math.abs(+dot.getAttribute('cx')-p.x)<.001&&Math.abs(+dot.getAttribute('cy')-p.y)<.001};
+      });
+    }''')
+    for landmark in alignment:
+        check(f'{landmark["id"]} projected on or near land',landmark['nearLand'])
+        check(f'{landmark["id"]} dot stays at geographic coordinate',landmark['exact'])
     # Map marker -> stop detail
     page.locator('.map-marker[data-stop="london"] circle.dot').click()
     check('click London map marker opens detail', page.locator('#view-stop').is_visible() and '伦敦' in page.locator('#stop-detail').inner_text())
@@ -38,6 +77,7 @@ with sync_playwright() as p:
     check('production -> city navigation', page.locator('#view-stop').is_visible() and '首尔' in page.locator('#stop-detail').inner_text())
     # Production hierarchy
     page.locator('nav [data-view="map"]').click()
+    page.locator('[data-region-filter="all"]').click()
     page.locator('.map-marker[data-stop="london"] circle.dot').click()
     page.locator('#stop-detail [data-production="west-end"]').first.click()
     check('breadcrumb enters London production', page.locator('#view-production').is_visible() and '伦敦西区驻演' in page.locator('#production-detail').inner_text())
@@ -70,13 +110,51 @@ with sync_playwright() as p:
     check('Europe filter leaves one marker', page.locator('.map-marker').count()==1)
     check('Europe filter is active', page.locator('[data-region-filter="europe"]').get_attribute('class').find('active')>=0)
     before=page.locator('#world-map').get_attribute('viewBox')
+    check('Europe filter fits the viewport',before!='0 0 1000 500')
     page.locator('#zoom-in').click()
     after=page.locator('#world-map').get_attribute('viewBox')
     check('map zoom changes viewBox', before!=after, f'{before} -> {after}')
     page.locator('#zoom-reset').click()
-    check('map zoom reset', page.locator('#world-map').get_attribute('viewBox')=='0 0 1000 500')
+    check('map zoom reset returns selected region', page.locator('#world-map').get_attribute('viewBox')==before)
+    page.locator('[data-region-filter="all"]').click()
+    page.locator('.map-marker[data-stop="london"]').focus()
+    page.keyboard.press('Enter')
+    check('keyboard opens map marker detail',page.locator('#view-stop').is_visible() and '伦敦' in page.locator('#stop-detail').inner_text())
+    page.locator('nav [data-view="map"]').click()
+    page.locator('[data-region-filter="asia"]').click()
+    bounds=page.locator('#world-map').bounding_box()
+    before_pan=page.locator('#world-map').get_attribute('viewBox')
+    page.mouse.move(bounds['x']+bounds['width']*.2,bounds['y']+bounds['height']*.8)
+    page.mouse.down()
+    page.mouse.move(bounds['x']+bounds['width']*.3,bounds['y']+bounds['height']*.8,steps=5)
+    page.mouse.up()
+    check('dragging map pans viewport',page.locator('#world-map').get_attribute('viewBox')!=before_pan)
+    page.locator('#zoom-reset').click()
     page.locator('[data-region-filter="all"]').click()
     check('global filter restores 22 markers', page.locator('.map-marker').count()==22)
+    check('global filter resets world viewport',page.locator('#world-map').get_attribute('viewBox')=='0 0 1000 500')
+    page.locator('[data-region-filter="north-america"]').click()
+    for stop_id in page.evaluate('HAMILTON_APP_TEST.DATA.stops.filter(s=>s.region==="north-america").map(s=>s.id)'):
+        try:
+            page.locator(f'.map-marker[data-stop="{stop_id}"] .dot').click(timeout=1500)
+            check(f'North America marker clicks correct city: {stop_id}',page.evaluate('HAMILTON_APP_TEST.state.stopId')==stop_id and page.locator('#view-stop').is_visible())
+        except Exception as error:
+            check(f'North America marker clicks correct city: {stop_id}',False,str(error).splitlines()[0])
+        page.locator('nav [data-view="map"]').click()
+    page.locator('[data-region-filter="all"]').click()
+    page.locator('#region-grid [data-region-open="asia"]').click()
+    page.locator('nav [data-view="map"]').click()
+    check('region navigation synchronizes returned map',page.locator('.map-marker').count()==2 and 'active' in page.locator('[data-region-filter="asia"]').get_attribute('class'))
+    page.locator('[data-region-filter="asia"]').click()
+    page.locator('#zoom-in').click()
+    check('Korea stays inside zoomed viewport',page.evaluate('''() => {
+      const box=document.querySelector('#world-map').viewBox.baseVal;
+      return [...document.querySelectorAll('.map-marker .dot')].every(dot=>{
+        const x=+dot.getAttribute('cx'),y=+dot.getAttribute('cy');
+        return x>=box.x&&x<=box.x+box.width&&y>=box.y&&y<=box.y+box.height;
+      });
+    }'''))
+    page.locator('[data-region-filter="all"]').click()
     # Production filters
     page.locator('nav [data-view="stops"]').click()
     page.locator('#stop-search').fill('Dream Theatre')
@@ -107,6 +185,10 @@ with sync_playwright() as p:
     check('plan form saves selected Busan date and tier', '釜山' in page.locator('#saved-plan').inner_text() and '₩360,000' in page.locator('#saved-plan').inner_text())
     page.locator('[data-check="official"]').check()
     check('checklist responds to user input', page.locator('[data-check="official"]').is_checked())
+    page.reload(wait_until='domcontentloaded')
+    page.locator('nav [data-view="plan"]').click()
+    check('plan survives reload with original storage key',page.evaluate('JSON.parse(localStorage.getItem("hamilton-world-atlas-v1")).plan.stopId')=='busan' and '₩360,000' in page.locator('#saved-plan').inner_text())
+    check('checklist survives reload',page.locator('[data-check="official"]').is_checked())
     with page.expect_download() as download_info:
         page.locator('#export-json').click()
     download=download_info.value
@@ -116,14 +198,30 @@ with sync_playwright() as p:
     download=download_info.value
     check('ICS reminder export downloads', download.suggested_filename=='Hamilton-busan-reminder.ics', download.suggested_filename)
     check('no uncaught JS errors', len(errors)==0, '; '.join(errors))
+    check('offline map loads no external resources',len(external_requests)==0,'; '.join(external_requests))
     # screenshot final home page
     page.locator('nav [data-view="map"]').click()
-    page.locator('#toast').evaluate('(e)=>e.classList.remove("show")')
-    page.screenshot(path=str(ROOT/'tests'/'preview-desktop.png'),full_page=True)
+    page.add_style_tag(content='#toast{display:none!important}')
+    page.screenshot(path=str(artifacts/'preview-desktop.png'),full_page=True)
+    page.locator('#world-map').screenshot(path=str(artifacts/'map-global.png'))
+    for region in ['north-america','europe','asia']:
+        page.locator(f'[data-region-filter="{region}"]').click()
+        page.locator('#world-map').screenshot(path=str(artifacts/f'map-{region}-desktop.png'))
+    page.locator('[data-region-filter="all"]').click()
     page.set_viewport_size({'width':390,'height':844})
     check('mobile layout has no horizontal overflow', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'), f"{page.evaluate('document.documentElement.scrollWidth')} vs {page.evaluate('window.innerWidth')}")
-    page.screenshot(path=str(ROOT/'tests'/'preview-mobile.png'),full_page=True)
+    page.screenshot(path=str(artifacts/'preview-mobile.png'),full_page=True)
+    page.locator('[data-region-filter="asia"]').click()
+    page.locator('.map-marker[data-stop="seoul"] .dot').click()
+    check('mobile Seoul marker opens correct detail',page.locator('#view-stop').is_visible() and page.evaluate('HAMILTON_APP_TEST.state.stopId')=='seoul')
+    page.locator('nav [data-view="map"]').click()
+    page.locator('.map-marker[data-stop="busan"] .dot').click()
+    check('mobile Busan marker opens correct detail',page.locator('#view-stop').is_visible() and page.evaluate('HAMILTON_APP_TEST.state.stopId')=='busan')
+    page.locator('nav [data-view="map"]').click()
+    page.locator('#world-map').screenshot(path=str(artifacts/'map-asia-mobile.png'))
     browser.close()
+server.shutdown()
+server.server_close()
 for i,(name,ok,detail) in enumerate(checks,1):
  print(f'{i:02d}. {"PASS" if ok else "FAIL"} - {name}'+(f' ({detail})' if detail else ''))
 print(f'RESULT: {sum(ok for _,ok,_ in checks)}/{len(checks)} passed')

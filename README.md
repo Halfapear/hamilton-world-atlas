@@ -4,7 +4,7 @@
 
 ## 当前版本
 
-- 应用版本：**v1.1**（2026-11-04，地图修复版）
+- 应用版本：**v1.1**（2026-11-04，地图修复与手机界面优化版）
 - 数据核验日期：2026-10-28
 - 4 个制作板块：纽约百老汇、北美巡演、伦敦西区、韩国世界巡演
 - 22 个当前／即将演出站点：纽约 1 个、北美巡演 18 个、伦敦 1 个、韩国 2 个
@@ -49,7 +49,7 @@
 
 ## 测试
 
-见 `tests/TEST_REPORT.md`。v1.1 在 Windows 的 Microsoft Edge 和 Chromium 中各通过 **87 项**浏览器交互检查，另有 2 项地图几何回归测试。测试访问真实 localhost 页面，覆盖地理坐标、海岸线、密集点位点击、区域缩放、拖拽、键盘导航、购票准备功能及刷新后保存记录。
+见 `tests/TEST_REPORT.md`。v1.1 在 Windows 的 Microsoft Edge 和 Chromium 中：网页版各通过 **95 项**浏览器交互检查，小工具版各通过 **24 项**；另有 2 项地图几何测试及 1 项独立目录打包测试。测试访问真实 localhost 页面，不等同于小红书 App 真机审核。
 
 ```powershell
 python -m pip install playwright
@@ -72,3 +72,11 @@ python tests/test_app.py
 - 原有个人计划存储键不变。票务数据仍核验于 **2026-10-28**，本次修复不代表重新核实开票／余票。
 
 底图来源和许可见 `data/README.md`；更新记录见 `CHANGELOG.md`。
+
+## v1.1 手机界面与小红书版
+
+保留深蓝＋金色票券视觉；手机压缩装饰区、增加韩国城市快捷入口，明确显示北京时间与数据核验日期。地图与导航按钮具有至少 44px 的触控高度（390px 模拟视口验证）。未清除原有计划，没有改动票务核验日期。
+
+`src/mobile-polish.css` 和 `src/quick-start.js` 是两版共享界面源；`minitool/` 保存小红书沙箱版源码。运行 `python tools/build_minitool.py` 会生成根目录仅含 index.html 与 app.js 的候选上传包。上传、实名认证、审核、活动资格仍需在平台内完成。详见 `minitool/README.md`。
+
+配图可运行 `python tools/render_note_assets.py` 生成到忽略上传的 `output/note-assets/`，采用隔离浏览器上下文，不包含作者真实计划。生成图片仅用本工具界面，不使用演出剧照。

@@ -26,6 +26,10 @@ for stop in stops:
                and -limit <= stop[k] <= limit for k, limit in [('lat', 90), ('lon', 180)]):
         raise SystemExit(f'Invalid latitude/longitude for {stop.get("id")}')
 template = TEMPLATE.read_text(encoding='utf-8')
+for placeholder, source in [('__MOBILE_POLISH__','mobile-polish.css'),('__QUICK_START__','quick-start.js')]:
+    if template.count(placeholder)!=1:
+        raise SystemExit('Expected one shared UI placeholder: '+placeholder)
+    template=template.replace(placeholder,(ROOT/'src'/source).read_text(encoding='utf-8'))
 marker = '__HAMILTON_DATA__'
 if template.count(marker) != 1:
     raise SystemExit('Template must contain exactly one data placeholder')

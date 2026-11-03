@@ -11,7 +11,18 @@
 - 网页版未捕获 JS／控制台错误：0；页面加载外部资源请求：0；移动端无横向溢出
 - 小工具版无未捕获 JS 异常；Edge 会请求 favicon.ico 得到 404，不影响应用，未将其宣称为零控制台错误
 - 两次网页构建 SHA256 一致：`1E4BB37F7C9336C27725F23B09A4351586F080ADEDBDDF7BE399363824EDCF52`
-- 两次小工具 ZIP SHA256 一致：`1CD2CBC968CA99A9979751BC5F551AC7F56613EBC98E6A70FA83BF7BFD096CEA`
+- 两次当前小工具 ZIP（v1.1-compliant）SHA256 一致：`EBBE78B5761B7809262A8D67A0ADE942B5B61EA04E5F72DD86DE54B8C8F9FE66`；70,726 字节。
+
+## 官方规范上传前检查（追加）
+
+- 读取 minitool-zip-builder 1.8.0 及对应参考文档；在线 API 文档页面标注更新日期 2026-10-30。
+- 原生存储写失败不能回退后假报成功；保存操作与状态栏明确提示未持久保存。
+- Flex gap 通过一次真实布局测量检测；旧布局单边 margin、基础焦点样式与 Grid 的 grid-gap 有回退。
+- 9.49+ 使用 getWindowInfo 的逻辑像素矩形避让顶部原生按钮，尺寸变化重新读取；接口不可用保留保守间距。
+- 新增契约模拟测试 **11/11**：顶部避让与窗口更新、横向和纵向间距、原生写入失败、未静默回退到旧存储、完全无存储时的诚实提示，以及已有保存状态下清单勾选写入失败的状态刷新／通知。前 6 项先前记录了失败到通过；再加 3 项先失败（6/9）后 9/9；复核补清单路径先失败（9/11）后 11/11。模拟不能验证真实平台桥接。
+- 修复后重新运行小工具 Edge 146 / Chromium 148，各 **24/24**；地图几何 **2/2**，独立重复构建 **1/1**。网页版未改动，95/95 是此前版本测试结果。
+- 官方 Python 体积审计：最终 ZIP **2 文件、0 警告**；源码目录 **4 文件、0 警告**。审计只检查体积，非语义合规或审核结论。
+- 未引入定位、AI、硬件或账号信息权限；没有新增联网、自动发布、支付或抢票。
 
 ## 手机优化新增验证
 
@@ -44,6 +55,7 @@ python tools/build.py
 python tests/test_map_geometry.py
 python tests/test_build_minitool.py
 python tools/build_minitool.py
+python tests/test_mini_contract.py
 $env:ATLAS_BROWSER='msedge'
 python tests/test_app.py
 python tests/test_minitool.py

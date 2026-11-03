@@ -35,8 +35,28 @@ THIS SOFTWARE.
 @media (max-width:650px){.hero h2{font-size:39px}.detail-head h2{font-size:29px}.about-hero h2{font-size:30px}.orbit{width:230px;height:230px}}
 /* grid-gap works on the older WebView; gap remains as enhancement for newer browsers */
 .top{grid-gap:16px}.brand{grid-gap:12px}.top-meta{grid-gap:9px}.nav{grid-gap:5px}.hero{grid-gap:28px}.hero-actions{grid-gap:9px}.hero-metrics{grid-gap:8px}.section-head{grid-gap:14px}.map-layout{grid-gap:14px}.map-title{grid-gap:12px}.map-controls{grid-gap:6px}.legend{grid-gap:12px}.region-grid{grid-gap:10px}.filter-row{grid-gap:9px}.cards-grid{grid-gap:11px}.detail-grid{grid-gap:13px}.info-row{grid-gap:10px}.price-grid{grid-gap:6px}.guide-grid{grid-gap:11px}.about-stats{grid-gap:8px}.form-grid{grid-gap:11px}.plan-grid{grid-gap:13px}.btn-row{grid-gap:9px}.toolbar{grid-gap:8px}.card-bottom{grid-gap:10px}.crumb{grid-gap:8px}
-/* flex gap fallback */
-@supports not (gap:1px){.brand > * + *{margin-left:12px}.top-meta > * + *{margin-left:9px}.nav > * + *{margin-left:5px}.hero-actions > * + *{margin-left:9px}.hero-metrics > * + *{margin-left:8px}.section-head > * + *{margin-left:14px}.map-title > * + *{margin-left:12px}.map-controls > * + *{margin-left:6px}.legend > * + *{margin-left:12px}.btn-row > * + *{margin-left:9px}.toolbar > * + *{margin-left:8px}.top > * + *{margin-left:16px}.detail-head > * + *{margin-left:15px}.card-bottom > * + *{margin-left:10px}}
+/* Flex gap uses the measured layout capability, never a syntax-only supports query. */
+html:not(.supports-flex-gap) .top > * + *{margin-left:16px}
+html:not(.supports-flex-gap) .section-head > * + *{margin-left:14px}
+html:not(.supports-flex-gap) .map-title > * + *,html:not(.supports-flex-gap) .detail-head > * + *{margin-left:12px}
+html:not(.supports-flex-gap) .prod-card > * + *{margin-left:11px}
+html:not(.supports-flex-gap) .stop-card > * + *{margin-top:8px}
+html:not(.supports-flex-gap) .checklist label > * + *{margin-left:9px}
+html:not(.supports-flex-gap) .quick-start-heading > * + *,html:not(.supports-flex-gap) .card-bottom > * + *{margin-left:10px}
+html:not(.supports-flex-gap) .crumb > * + *,html:not(.supports-flex-gap) .btn > * + *{margin-left:7px}
+html:not(.supports-flex-gap) .legend span > * + *,html:not(.supports-flex-gap) .chip > * + *{margin-left:6px}
+html:not(.supports-flex-gap) .countdown > * + *,html:not(.supports-flex-gap) .footer > * + *{margin-left:12px}
+html:not(.supports-flex-gap) .nav > * + *{margin-left:5px}
+html:not(.supports-flex-gap) .brand > * + *{margin-left:12px}
+html:not(.supports-flex-gap) .top-meta > * + *,html:not(.supports-flex-gap) .hero-actions > * + *,html:not(.supports-flex-gap) .btn-row > * + *{margin-left:9px}
+html:not(.supports-flex-gap) .map-controls > * + *{margin-left:6px}
+html:not(.supports-flex-gap) .zoom-controls > * + *{margin-left:5px}
+html:not(.supports-flex-gap) .toolbar > * + *,html:not(.supports-flex-gap) .hero-metrics > * + *{margin-left:8px}
+html:not(.supports-flex-gap) .legend > * + *{margin-left:12px}
+html:not(.supports-flex-gap) .quick-city > * + *{margin-left:5px}
+.quick-start-grid{grid-gap:10px}
+.prod-card:focus,.quick-city:focus,.btn:focus,.nav button:focus{outline:2px solid #9a732d;outline-offset:2px}
+@media(max-width:560px){.quick-start-grid{grid-gap:8px}html:not(.supports-flex-gap) .nav > * + *{margin-left:2px}html:not(.supports-flex-gap) .hero-actions > * + *{margin-left:7px}}
 .mini-modal{position:fixed;z-index:9999;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding:18px}
 .mini-modal.hidden{display:none!important}
 .mini-modal-backdrop{position:absolute;left:0;top:0;right:0;bottom:0;background:rgba(7,13,20,.68)}

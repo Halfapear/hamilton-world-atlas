@@ -23,7 +23,7 @@ class MiniBuildTests(unittest.TestCase):
             command = [sys.executable, str(checkout / 'tools/build_minitool.py')]
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
-            package = checkout / 'output/Hamilton_World_Atlas_XHS_MiniTool_v1.1-polished.zip'
+            package = checkout / 'output/Hamilton_World_Atlas_XHS_MiniTool_v1.1-compliant.zip'
             first = package.read_bytes()
             with zipfile.ZipFile(package) as archive:
                 self.assertEqual(archive.namelist(), ['index.html', 'app.js'])

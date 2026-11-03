@@ -31,7 +31,7 @@ if args.sync_sibling:
         (sibling/name).write_bytes((MINI/name).read_bytes())
     destination=sibling.parent
 destination.mkdir(exist_ok=True)
-package=destination/'Hamilton_World_Atlas_XHS_MiniTool_v1.1-polished.zip'
+package=destination/'Hamilton_World_Atlas_XHS_MiniTool_v1.1-compliant.zip'
 with zipfile.ZipFile(package,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
     for name in ('index.html','app.js'):
         info=zipfile.ZipInfo(name,date_time=(2026,11,4,0,0,0))

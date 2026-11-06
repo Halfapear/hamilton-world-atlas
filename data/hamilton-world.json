@@ -1,11 +1,12 @@
 {
   "meta": {
-    "version": "1.1",
+    "version": "1.2",
     "title": "Hamilton World Atlas",
     "titleZh": "汉密尔顿世界巡演图鉴",
     "lastVerified": "2026-10-28",
     "scope": "仅收录《Hamilton / 汉密尔顿》当前官方页面可核实的驻演与巡演站点；不混入其他作品。",
-    "sourceNote": "场次、余票和票价会变化；购票前以对应官方页面为准。"
+    "sourceNote": "官宣站点与未官宣线索分开展示；资料按条核验，非实时余票服务。",
+    "updatedAt": "2026-11-06T16:48:00+08:00"
   },
   "regions": [
     {
@@ -681,7 +682,32 @@
         }
       ],
       "routeOrder": 0,
-      "mapLabel": "BUSAN"
+      "mapLabel": "BUSAN",
+      "verifiedAt": "2026-11-06T16:37:00+08:00",
+      "evidenceLevel": "官方已确认",
+      "verificationStatus": "已读取官方页面",
+      "ticketingStatus": "官宣待公开开票",
+      "dateVerification": {
+        "checkedAt": "2026-11-06T16:37:00+08:00",
+        "url": "https://hamiltonmusical.com/world-tour/tickets/",
+        "title": "Hamilton World Tour 官方票务页"
+      },
+      "dateConflict": "用户摘要早期开始日为 2026-12-15；官方为 2026-12-17。前两天不可自动视为预演，预演另待公告。",
+      "ticketScope": "公开开票 11-11 13:00（北京时间）；公布演出期 2026-12-17 至 2027-01-16；公告页不是实时选座页。",
+      "presales": [
+        {
+          "label": "冬季套票购票者资格预售",
+          "start": "2026-11-09T13:00:00+08:00",
+          "end": "2026-11-10T10:00:00+08:00",
+          "eligibility": "仅符合冬季套票购票条件者，按官方公告核对资格"
+        },
+        {
+          "label": "剧院会员资格预售",
+          "start": "2026-11-10T13:00:00+08:00",
+          "end": "2026-11-11T08:00:00+08:00",
+          "eligibility": "仅符合 Dream Theatre 会员预售条件者"
+        }
+      ]
     },
     {
       "id": "seoul",
@@ -731,7 +757,19 @@
         }
       ],
       "routeOrder": 0,
-      "mapLabel": "SEOUL"
+      "mapLabel": "SEOUL",
+      "verifiedAt": "2026-11-06T16:37:00+08:00",
+      "evidenceLevel": "官方已确认",
+      "verificationStatus": "已读取官方页面",
+      "ticketingStatus": "官宣待公开开票",
+      "dateVerification": {
+        "checkedAt": "2026-11-06T16:37:00+08:00",
+        "url": "https://hamiltonmusical.com/world-tour/tickets/",
+        "title": "Hamilton World Tour 官方票务页"
+      },
+      "dateConflict": "用户摘要早期结束日为 2027-03-21；官方为 2027-03-20，以官宣为准。",
+      "ticketScope": "公开开票 11-11 14:00（北京时间）；首轮仅 2027-01-21 至 01-24 开幕周部分一楼 VIP 座位，不是全季或全部票档。",
+      "presales": []
     }
   ],
   "news": [
@@ -803,6 +841,197 @@
     {
       "role": "John Laurens / Philip Hamilton",
       "name": "Jake Halsey-Jones"
+    }
+  ],
+  "tourLeads": [
+    {
+      "id": "lead-shanghai",
+      "city": "上海",
+      "cityEn": "Shanghai",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "原来源访问失败；仅收到摘要",
+      "dateText": "2027-04-07 至 2027-05-30（暂定）",
+      "venueText": "场馆待确认",
+      "coordinateKind": "城市中心",
+      "lat": 31.2304,
+      "lon": 121.4737,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "日本音乐剧资讯（用户提供链接）",
+          "url": "https://note.com/musical_sokuhou/n/nfa3db0b130d8",
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "访问失败",
+          "attemptedAt": "2026-11-06T16:37:00+08:00"
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-beijing",
+      "city": "北京",
+      "cityEn": "Beijing",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "原来源访问失败；仅收到摘要",
+      "dateText": "2027-06-02 至 2027-07-18（暂定）",
+      "venueText": "场馆待确认",
+      "coordinateKind": "城市中心",
+      "lat": 39.9042,
+      "lon": 116.4074,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "日本音乐剧资讯（用户提供链接）",
+          "url": "https://note.com/musical_sokuhou/n/nfa3db0b130d8",
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "访问失败",
+          "attemptedAt": "2026-11-06T16:37:00+08:00"
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-tokyo",
+      "city": "东京",
+      "cityEn": "Tokyo",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "原来源访问失败；仅收到摘要",
+      "dateText": "2027-08-04 至 2027-08-29（暂定）",
+      "venueText": "Tokyu Theatre Orb（摘要称；未核实）",
+      "coordinateKind": "城市中心",
+      "lat": 35.6762,
+      "lon": 139.6503,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "日本音乐剧资讯（用户提供链接）",
+          "url": "https://note.com/musical_sokuhou/n/nfa3db0b130d8",
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "访问失败",
+          "attemptedAt": "2026-11-06T16:37:00+08:00"
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-taipei",
+      "city": "台北",
+      "cityEn": "Taipei",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "原来源访问失败；仅收到摘要",
+      "dateText": "2027-09-15 至 2027-09-26（暂定）",
+      "venueText": "场馆待确认",
+      "coordinateKind": "城市中心",
+      "lat": 25.033,
+      "lon": 121.5654,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "日本音乐剧资讯（用户提供链接）",
+          "url": "https://note.com/musical_sokuhou/n/nfa3db0b130d8",
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "访问失败",
+          "attemptedAt": "2026-11-06T16:37:00+08:00"
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-kaohsiung",
+      "city": "高雄",
+      "cityEn": "Kaohsiung",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "仅收到摘要；无独立原站链接",
+      "dateText": "2027 年 10 月（无具体日期；暂定）",
+      "venueText": "National Kaohsiung Center for the Arts（摘要称；未核实）",
+      "coordinateKind": "城市中心",
+      "lat": 22.6273,
+      "lon": 120.3014,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "用户提供的亚洲巡演摘要",
+          "url": null,
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "仅收到摘要，无独立原站链接",
+          "attemptedAt": null
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-hong-kong",
+      "city": "香港",
+      "cityEn": "Hong Kong",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "原来源访问失败；仅收到摘要",
+      "dateText": "2027 年 11—12 月（无具体日期；暂定）",
+      "venueText": "WestK Performing Arts Centre（摘要原文；未核实）",
+      "coordinateKind": "城市中心",
+      "lat": 22.3193,
+      "lon": 114.1694,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "南华早报（用户提供链接）",
+          "url": "https://www.scmp.com/lifestyle/arts/article/3368600/could-hit-musical-hamilton-be-coming-hong-kong-2027",
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "访问失败",
+          "attemptedAt": "2026-11-06T16:37:00+08:00"
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
+    },
+    {
+      "id": "lead-manila",
+      "city": "马尼拉",
+      "cityEn": "Manila",
+      "region": "asia",
+      "productionKind": "World Tour",
+      "evidenceLevel": "用户提供摘要",
+      "verificationStatus": "仅收到摘要；无独立原站链接",
+      "dateText": "2027 年 12 月至 2028 年 2 月（无具体日期；暂定）",
+      "venueText": "Solaire Theatre（摘要称；未核实）",
+      "coordinateKind": "城市中心",
+      "lat": 14.5995,
+      "lon": 120.9842,
+      "receivedAt": "2026-11-06T16:37:00+08:00",
+      "verifiedAt": null,
+      "sources": [
+        {
+          "title": "用户提供的亚洲巡演摘要",
+          "url": null,
+          "publicationDate": null,
+          "publicationNote": "用户称 2026 年 9 月流出；公布时间未独立核实",
+          "accessStatus": "仅收到摘要，无独立原站链接",
+          "attemptedAt": null
+        }
+      ],
+      "changeNote": "仅暂存用户摘要，截图与原文未独立核实；不代表官方确认排期。"
     }
   ]
 }

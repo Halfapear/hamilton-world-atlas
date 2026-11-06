@@ -6,6 +6,12 @@
 
 编辑 `hamilton-world.json` 后运行 `python tools/build.py` 生成 `index.html`。
 
+## v1.2 信息分级（文档更新：2026-11-06 16:59，北京时间）
+
+`tourLeads` 与 `stops` 分开：线索 ID 独立，保存 `evidenceLevel`、`verificationStatus`、`dateText`、`venueText`、`sources`、摘要整理时间 `receivedAt` 和独立核验时间 `verifiedAt`（未核验为 null）。来源 `publicationDate` 不知道就 null，访问失败不能晋升为官宣。线索禁止 `bookingUrl`／`prices`／`ticketOpen`／`startDate`／`endDate`。
+
+`meta.updatedAt` 是程序资料编辑时间，`meta.lastVerified=2026-10-28` 是保留的其他站点基线。韩国 `verifiedAt` 与 `dateVerification.checkedAt` 对应 11-06 实际核验；不把22站全部标为今天核验。两构建用 `tools/atlas_data.py` 同一加载／验证逻辑，mini 在 managed DATA 区块中嵌入。
+
 ## 顶层字段
 
 - `meta`：项目名称、核验日期与范围说明。

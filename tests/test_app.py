@@ -37,7 +37,7 @@ with sync_playwright() as p:
     check('dynamic count badges match data', page.locator('#metric-stops').inner_text().startswith('22') and page.locator('[data-region-filter="north-america"]').inner_text().endswith('19'))
     check('22 stop cards', page.locator('#stops-grid .stop-card').count()==22)
     check('Hamilton-only scope', 'KPOP' not in page.locator('body').inner_text() and '大麦' not in page.locator('body').inner_text())
-    check('v1.1 metadata matches version badge',page.evaluate('HAMILTON_APP_TEST.DATA.meta.version')=='1.1' and page.locator('#app-version').inner_text()=='v1.1')
+    check('release metadata matches version badge',page.evaluate('HAMILTON_APP_TEST.DATA.meta.version')=='1.2' and page.locator('#app-version').inner_text()=='v1.2')
     check('map routes share geographic marker coordinates',page.evaluate('''() => {
       const app=HAMILTON_APP_TEST;
       const routes=[['.route-line','north-american-tour'],['.korea-line','korea-world-tour']];

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """Build the self-contained Hamilton World Atlas HTML from editable JSON data."""
 from pathlib import Path
-import json
-from map_geometry import PROJECTION, land_svg
+from map_geometry import land_svg
+from atlas_data import load_data, script_json
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'data' / 'hamilton-world.json'
 TEMPLATE = ROOT / 'src' / 'index.template.html'
 OUTPUT = ROOT / 'index.html'
-obj = json.loads(DATA.read_text(encoding='utf-8'))
-obj['mapProjection'] = PROJECTION
+obj = load_data(ROOT)
 stops = obj.get('stops', [])
 productions = obj.get('productions', [])
 if not stops or not productions:
@@ -26,14 +25,14 @@ for stop in stops:
                and -limit <= stop[k] <= limit for k, limit in [('lat', 90), ('lon', 180)]):
         raise SystemExit(f'Invalid latitude/longitude for {stop.get("id")}')
 template = TEMPLATE.read_text(encoding='utf-8')
-for placeholder, source in [('__MOBILE_POLISH__','mobile-polish.css'),('__QUICK_START__','quick-start.js')]:
+for placeholder, source in [('__MOBILE_POLISH__','mobile-polish.css'),('__QUICK_START__','quick-start.js'),('__TOUR_LEADS__','tour-leads.js'),('__TOUR_LEADS_CSS__','tour-leads.css')]:
     if template.count(placeholder)!=1:
         raise SystemExit('Expected one shared UI placeholder: '+placeholder)
     template=template.replace(placeholder,(ROOT/'src'/source).read_text(encoding='utf-8'))
 marker = '__HAMILTON_DATA__'
 if template.count(marker) != 1:
     raise SystemExit('Template must contain exactly one data placeholder')
-html = template.replace(marker, json.dumps(obj, ensure_ascii=False, separators=(',', ':')))
+html = template.replace(marker, script_json(obj))
 if html.count('__WORLD_LAND__') != 1:
     raise SystemExit('Template must contain exactly one land placeholder')
 html = html.replace('__WORLD_LAND__', land_svg(ROOT / 'data' / 'world-land-110m.json'))

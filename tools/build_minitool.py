@@ -2,12 +2,14 @@
 from pathlib import Path
 import argparse
 import zipfile
+from atlas_data import load_data, script_json
 
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--sync-sibling', action='store_true', help='Mirror tracked sources into ../小红书版/MiniTool and put the ZIP next to it')
 args=parser.parse_args()
 MINI=ROOT/'minitool'
+data=load_data(ROOT)
 
 def managed_block(text, start, end, content):
     if text.count(start)!=1 or text.count(end)!=1:
@@ -20,6 +22,9 @@ html=(MINI/'index.html').read_text(encoding='utf-8')
 script=(MINI/'app.js').read_text(encoding='utf-8')
 html=managed_block(html,'/* SHARED_MOBILE_START */','/* SHARED_MOBILE_END */',(ROOT/'src/mobile-polish.css').read_text(encoding='utf-8'))
 script=managed_block(script,'/* SHARED_QUICK_START */','/* SHARED_QUICK_END */',(ROOT/'src/quick-start.js').read_text(encoding='utf-8'))
+html=managed_block(html,'/* SHARED_LEADS_CSS_START */','/* SHARED_LEADS_CSS_END */',(ROOT/'src/tour-leads.css').read_text(encoding='utf-8'))
+script=managed_block(script,'/* SHARED_DATA_START */','/* SHARED_DATA_END */','const DATA='+script_json(data)+';')
+script=managed_block(script,'/* SHARED_LEADS_START */','/* SHARED_LEADS_END */',(ROOT/'src/tour-leads.js').read_text(encoding='utf-8'))
 (MINI/'index.html').write_bytes(html.encode('utf-8'))
 (MINI/'app.js').write_bytes(script.encode('utf-8'))
 destination=ROOT/'output'
@@ -31,7 +36,7 @@ if args.sync_sibling:
         (sibling/name).write_bytes((MINI/name).read_bytes())
     destination=sibling.parent
 destination.mkdir(exist_ok=True)
-package=destination/'Hamilton_World_Atlas_XHS_MiniTool_v1.1-compliant.zip'
+package=destination/('Hamilton_World_Atlas_XHS_MiniTool_v'+data['meta']['version']+'-compliant.zip')
 with zipfile.ZipFile(package,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
     for name in ('index.html','app.js'):
         info=zipfile.ZipInfo(name,date_time=(2026,11,4,0,0,0))

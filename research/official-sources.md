@@ -8,7 +8,7 @@
 - 当天约 16:37：[World Tour](https://hamiltonmusical.com/world-tour/tickets/) 返回 HTTP 200，仍只列釜山 2026-12-17 至 2027-01-16、首尔 2027-01-21 至 03-20；这两站在当前页面可确认。
 - 同次读取：[International Tour](https://hamiltonmusical.com/international-tour/tickets/) 返回 HTTP 200，正文为 “No upcoming tour stops at this time”。不能把它解释成 World Tour 没有韩国站点。
 - 同次尝试：用户提供的 note.com 文章和 SCMP 原站文章均 `fetch failed`，因此未独立核实其文章正文、发布时间或原截图。用户摘要仅作待核实线索，不能被归为官方来源。未使用 SCMP 非官方代理域名绕过访问限制。
-- 以上未写入程序的 lastVerified。新增线索详见 v1.2 方案，核验状态不得由“收到摘要”自动提升。
+- 以上未覆盖程序的 lastVerified 基线。2026-11-06 17:04 文档补记：v1.2已加入韩国逐条核验与7条独立tourLeads；收到摘要不提升核验等级，详见 docs/SOURCES-v1.2.md。
 
 ## 2026-10-28 原核验记录
 

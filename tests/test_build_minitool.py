@@ -13,22 +13,37 @@ class MiniBuildTests(unittest.TestCase):
     def test_standalone_checkout_and_deterministic_root_zip(self):
         with tempfile.TemporaryDirectory() as directory:
             checkout = Path(directory) / 'checkout'
-            for folder in ('tools', 'src', 'minitool'):
+            for folder in ('tools', 'src', 'minitool', 'data'):
                 (checkout / folder).mkdir(parents=True)
             shutil.copy(ROOT / 'tools/build_minitool.py', checkout / 'tools/build_minitool.py')
-            for name in ('mobile-polish.css', 'quick-start.js'):
+            for name in ('atlas_data.py', 'map_geometry.py'):
+                if (ROOT / 'tools' / name).exists():
+                    shutil.copy(ROOT / 'tools' / name, checkout / 'tools' / name)
+            shutil.copy(ROOT / 'data/hamilton-world.json', checkout / 'data/hamilton-world.json')
+            for name in ('mobile-polish.css', 'quick-start.js', 'tour-leads.js', 'tour-leads.css'):
+                if not (ROOT / 'src' / name).exists():
+                    continue
                 shutil.copy(ROOT / 'src' / name, checkout / 'src' / name)
-            (checkout / 'minitool/index.html').write_text('/* SHARED_MOBILE_START */old/* SHARED_MOBILE_END */', encoding='utf-8')
-            (checkout / 'minitool/app.js').write_text('/* SHARED_QUICK_START */old/* SHARED_QUICK_END */', encoding='utf-8')
+            (checkout / 'minitool/index.html').write_text('/* SHARED_MOBILE_START */old/* SHARED_MOBILE_END */\n/* SHARED_LEADS_CSS_START */old/* SHARED_LEADS_CSS_END */', encoding='utf-8')
+            (checkout / 'minitool/app.js').write_text('/* SHARED_DATA_START */const DATA={};/* SHARED_DATA_END */\n/* SHARED_QUICK_START */old/* SHARED_QUICK_END */\n/* SHARED_LEADS_START */old/* SHARED_LEADS_END */', encoding='utf-8')
             command = [sys.executable, str(checkout / 'tools/build_minitool.py')]
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
-            package = checkout / 'output/Hamilton_World_Atlas_XHS_MiniTool_v1.1-compliant.zip'
+            package = checkout / 'output/Hamilton_World_Atlas_XHS_MiniTool_v1.2-compliant.zip'
+            self.assertTrue(package.exists(), 'versioned v1.2 package required')
             first = package.read_bytes()
             with zipfile.ZipFile(package) as archive:
                 self.assertEqual(archive.namelist(), ['index.html', 'app.js'])
                 for name, shared in [('index.html', 'mobile-polish.css'), ('app.js', 'quick-start.js')]:
                     self.assertIn((checkout / 'src' / shared).read_bytes().strip(), archive.read(name))
+                import json
+                import re
+                script = archive.read('app.js').decode('utf-8')
+                embedded = json.loads(re.search(r'const DATA=(.+?);', script).group(1))
+                canonical = json.loads((checkout / 'data/hamilton-world.json').read_text(encoding='utf-8'))
+                self.assertEqual(embedded['stops'], canonical['stops'])
+                self.assertEqual(embedded['tourLeads'], canonical['tourLeads'])
+                self.assertEqual(embedded['mapProjection']['width'], 940)
             second = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(second.returncode, 0, second.stderr)
             self.assertEqual(first, package.read_bytes())

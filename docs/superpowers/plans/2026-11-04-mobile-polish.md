@@ -1,5 +1,8 @@
 # Mobile Polish Implementation Plan
 
+文档更新：2026-11-06 16:38（北京时间，UTC+08:00）。原方案日期 2026-11-04，初次写作具体时刻未记录；手机优化提交 b23717f 为 2026-11-04 00:57:41，后续适配提交 7a98fbe 为 01:25:12。
+历史权限提示：原方案的客服咨询已于 2026-11-04 04:07 取消，不能因保留旧任务条目而继续执行。2026-11-06 的定向可见笔记另获用户授权，主号宣传发布仍由用户操作。
+
 > Inline execution: use executing-plans and verify each task. User requests editing the existing checkout, not a new worktree.
 
 **Goal:** Deliver the approved mobile-first Hamilton interface, tested upload ZIP and user-operated note publishing instructions; continue official support/upload inquiry without publishing a note.
